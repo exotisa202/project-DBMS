@@ -12,4 +12,4 @@
 
 No Oracle instance/client was available. Stubbed route tests do not establish schema compatibility, database persistence, transaction behavior under Oracle, or correct date conversion. Login and registration intentionally return HTTP 501 rather than pretending to authenticate or writing plaintext passwords.
 
-No Docker/Podman was available. Bubblewrap network isolation was attempted but denied by host permissions. Tests ran in separate Node processes with localhost ephemeral ports in the cloud workspace. Docker recipes are supplied but were not run. No browser visual inspection or real donor-data workflows were performed.
+No Docker/Podman was available. Bubblewrap network isolation was attempted but denied by host permissions. Tests ran in separate Node processes with localhost ephemeral ports in the cloud workspace. Docker recipes are supplied but were not run. Chromium screenshot capture was attempted, including an escalated retry, but failed at process-singleton socket creation with `Operation not permitted`. No screenshots, browser visual verification, or real donor-data workflows are claimed.

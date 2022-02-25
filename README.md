@@ -1,75 +1,90 @@
-# Badhon: blood-donation database coursework
+# Badhon
+### Blood-donation database coursework · Express · EJS · Oracle
 
-An academic Express/EJS interface for donor records, blood-bank inventory, blood requests, and Oracle-backed forms. This repository preserves the original implementation and adds a separately runnable **synthetic, read-only UI demo**, not a production blood-donation service.
+A coursework application for organizing donor records, viewing blood-bank inventory, and browsing blood requests. This prepared checkout includes a **working, database-free UI preview** and a refactored Oracle application layer with synthetic automated tests.
 
-## Run the safe demo
+> **Demo, not a deployed healthcare service.** The preview contains only fictional records and is deliberately read-only. Oracle integration is not yet verified; authentication is intentionally unavailable rather than simulated as working.
 
-Requires Node.js 22 or newer and npm. No Oracle database, account, or native Oracle client is needed.
+## Try it in two minutes
+
+From this repository checkout, with **Node.js 22+** and npm:
 
 ```sh
-git clone --branch portfolio/demo-ready https://github.com/exotisa202/project-DBMS.git
-cd project-DBMS/demo
-npm ci
+cd demo
+npm ci --ignore-scripts
 npm test
 npm start
 ```
 
-Open http://127.0.0.1:3000. Set `PORT=3001 npm start` if the port is occupied. Stop with Ctrl+C. The demo binds only to localhost.
+Open **http://127.0.0.1:3000**. No database, login, API key, or Oracle Client is needed. Use `PORT=3001 npm start` if necessary; Ctrl+C stops the server.
 
-### Interview walkthrough
+## What to explore
 
-1. Open the demo landing page and explain that all displayed records are fictional.
-2. Show the donor directory and filter by A+ or O+; AB- demonstrates an empty result.
-3. Show sample blood-bank inventory and blood requests.
-4. Explain the original Express routes, EJS views, and Oracle query flow.
-5. Discuss the limitations below rather than claiming completed authentication or production readiness.
+| Screen | What it demonstrates |
+| --- | --- |
+| Home | Clearly labeled synthetic demo and navigation |
+| Donor directory | Existing EJS template populated with fictional donor records |
+| Blood-group search | Filtering, including the empty-result case |
+| Blood-bank inventory | Tabular inventory presentation |
+| Request listing | Structured blood-request information |
 
-The demo reuses the existing EJS listing templates. It never loads legacy route modules or connects to Oracle. It has no login, writes, or persistence; non-demo forms are deliberately disabled. CSS fonts/icons may depend on external CDNs. HTTP tests verify rendering and behavior, not visual screenshots.
+**A three-minute walkthrough:** open the directory, filter for `A+`, try `AB-` to show an empty result, then inspect inventory and requests. Explain how the original Oracle routes map records into the same listing templates. No form submissions create real records in the preview.
 
-## Repository layout
+## Architecture
 
-- `app.js`, `routes/`, `util/`: original Oracle-backed application, with environment-based connection configuration and localhost binding.
-- `views/`, `public/`: original templates, styles, and images.
-- `demo/`: isolated preview and automated HTTP smoke tests.
-
-**Branch note:** the original application was on `master`; `main` contained only a placeholder README. This work branch is based on `master`. Repository defaults were not changed.
-
-## Original Oracle application (not validated end-to-end)
-
-The root `package.json` uses `oracledb` 5.x, which requires compatible Oracle Client libraries, in addition to a running Oracle database and Node version supported by that driver. The safe demo uses its own dependency lockfile and does not install this legacy driver.
-
-For local integration work, use a disposable database with a `BADHON` schema because route SQL explicitly references that schema. Set `DB_USER`, `DB_PASSWORD`, and `DB_CONNECT_STRING` in your shell; `DB_CONNECT_STRING` is an Oracle Easy Connect string such as `localhost:1521/service_name`. No `.env` loader is included. Never commit credentials. Then install the root dependencies with `npm ci` and use `npm run start-server`.
-
-The legacy database paths are **not demo-ready** without additional work. Do not use real donor information or expose this server publicly.
-
-## Known limitations / next work
-
-- Login and registration now return HTTP 501: the historical implementation did not authenticate and stored plaintext passwords. Secure authentication is not implemented.
-- Database routes now use request-local inputs, awaited writes, parameter binding, connection cleanup, and centralized error handling. These changes are unit/syntax checked, not Oracle integration verified.
-- Authorization, input validation, secure password storage, and integration tests need implementation before deployment.
-- Database date handling and schema compatibility need testing against a disposable Oracle instance.
-- The legacy dependency tree has not been upgraded or certified secure.
-- Historical data exports, where present, may contain contact details or plaintext account records. Do not load, distribute, or use them in a portfolio demo. Review privacy and permissions with the owner; this change does not rewrite history or remove original data.
-
-## Attribution and validation
-
-The original Badhon README credited `@exotisa202` and identified this as BUET CSE 216 Level 2 Term 2 coursework. Existing source history and package attribution are preserved, including tutorial-derived metadata. Verify individual/team contributions and permission to publish coursework before using this as an individual portfolio claim. This repository substantially overlaps with the other Badhon/DBMS repository in the same account; it should not be presented as an independent second project without clarification.
-
-The synthetic preview is tested independently of Oracle using Node's test runner. Passing its tests does **not** validate the original database routes, authentication, or Oracle deployment.
-
-## Reproducible checks
-
-```sh
-# Synthetic legacy route tests; no Oracle calls are made:
-npm ci --ignore-scripts
-npm test
-# Standalone synthetic UI and helper tests:
-cd demo && npm ci --ignore-scripts && npm test
-# Optional container test from repository root:
-docker build -f demo/Dockerfile -t badhon-demo-test .
-docker run --rm --network none badhon-demo-test
+```mermaid
+flowchart LR
+    Browser[Local browser] --> Demo[Read-only Express demo]
+    Demo --> Fixtures[Synthetic in-memory records]
+    Demo --> Views[Original EJS views and static assets]
+    Legacy[Original Express application] --> Routes[Validated request-local route inputs]
+    Routes --> Database[Parameterized query helper]
+    Database -. integration not verified .-> Oracle[(Oracle BADHON schema)]
+    Legacy --> Views
 ```
 
-Docker is not installed in the preparation environment; the container recipe has not been executed. A bubblewrap network-isolation attempt was denied by the host. Tests ran as separate Node processes in the cloud workspace, using localhost ephemeral ports and synthetic records; this is not a claim of Docker-level isolation. Oracle integration is still blocked by the missing server/client. The legacy route suite substitutes a fake database and validates request handling only.
+The preview is a separate entry point, not an Oracle mock silently passed off as the full application. It does not import the legacy database routes.
 
-Modernization note: this preparation pass adds reproducibility and safety scaffolding without rewriting the original project history. New commit metadata retains the repository's previous tip timestamp at the owner's request; it is not evidence that these additions existed at that historical date.
+## Engineering improvements in this preparation pass
+
+- **Reproducible preview:** its own pinned dependency lockfile; no native database driver dependency.
+- **Safer request handling:** request-local values replace shared mutable state in database workflows; writes are awaited before redirecting.
+- **Clear failure paths:** centralized error responses, required-field validation, bound SQL parameters, and connection cleanup.
+- **Honest authentication boundary:** login and registration return `501` until secure authentication is implemented, replacing false-success login and plaintext registration behavior.
+- **Testable structure:** reusable database and route helpers, syntax checks, synthetic HTTP tests, and an optional container test recipe.
+- **Private-by-default execution:** localhost binding and environment-based database configuration; no credentials required for the demo.
+
+## Evidence, not just setup instructions
+
+| Check | Result | What it does **not** establish |
+| --- | --- | --- |
+| Synthetic UI/helper suite | **13 passed** | Browser visual correctness or Oracle behavior |
+| Legacy route suite, database stubbed | **17 passed** | Real database persistence/schema compatibility |
+| Demo production dependency audit | **0 known findings at preparation** | A complete security review |
+| Docker recipe | Provided, not executed | Container compatibility |
+
+See [full validation and limitations](VALIDATION.md), including the path-resolution defect caught and fixed by the route tests. Chromium screenshot capture was attempted but blocked by the host's socket permissions; no fabricated UI images are included.
+
+## Project map
+
+```text
+app.js             Original application entry point
+routes/            Oracle workflow routes
+util/              Query lifecycle, validation, configuration, and error helpers
+views/ + public/   Original interface templates and assets
+demo/              Runnable synthetic preview + 13 tests
+test/              17 synthetic legacy-route tests
+docs/              Detailed setup, safety, and project context
+```
+
+[Development setup and Oracle requirements](docs/DEVELOPMENT.md) · [Validation report](VALIDATION.md) · [Demo source](demo/server.js)
+
+## Provenance and remaining work
+
+The original Badhon documentation credits **`@exotisa202`** and identifies the project as **BUET CSE 216, Level 2 Term 2** coursework. Existing package/tutorial attribution and history are preserved. This repository substantially overlaps with the other Badhon/DBMS repository in the account; confirm ownership, team contributions, and which repository is canonical before presenting both as separate portfolio projects.
+
+The original application lives on `master`; `main` contained a placeholder README. This preparation branch does not change repository defaults. Historical data exports, where present, are not used by the demo and require privacy review before further distribution. Do not enter real donor or patient data.
+
+**Before any real deployment:** implement secure authentication/authorization, complete domain validation, review historical dependencies/data, and integration-test the Oracle schema and transactions. These are not completed features.
+
+*Modernization was performed during this portfolio-preparation pass. At the owner's request, commit timestamps retain the prior tip's timestamp; they are not evidence of when the new scaffolding was originally written.*
