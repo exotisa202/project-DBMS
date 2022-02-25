@@ -3,7 +3,7 @@ const path = require('path');
 const express = require('express');
 
 const rootDir = require('../util/path');
-const oracledb = require('oracledb');
+
 const router = express.Router();
 
 

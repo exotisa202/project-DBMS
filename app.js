@@ -9,7 +9,7 @@ const signup = require('./routes/signup');
 const login=require('./routes/login');
 const donor=require('./routes/donor');
 const home = require('./routes/home');
-const oracle = require('./util/oracleCon');
+
 const bloodbank=require('./routes/bloodbank');
 const updatedonor=require('./routes/updatedonor');
 const showdonor=require('./routes/viewdonor');
@@ -20,7 +20,7 @@ const showreq=require('./routes/showreq');
 //oracle();
 
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set('views', path.join(__dirname, 'views'));
 
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -40,4 +40,9 @@ app.use((req, res, next) => {
     res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
 });
 
-app.listen(3000);
+app.use((err, req, res, next) => {
+    console.error(err.message);
+    res.status(err.status === 400 ? 400 : 500).send(err.status === 400 ? err.message : 'Database operation failed. Check local server configuration.');
+});
+if (require.main === module) app.listen(Number(process.env.PORT || 3000), '127.0.0.1');
+module.exports = app;
