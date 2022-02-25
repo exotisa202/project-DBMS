@@ -59,7 +59,7 @@ The preview is a separate entry point, not an Oracle mock silently passed off as
 | Check | Result | What it does **not** establish |
 | --- | --- | --- |
 | Synthetic UI/helper suite | **13 passed** | Browser visual correctness or Oracle behavior |
-| Legacy route suite, database stubbed | **17 passed** | Real database persistence/schema compatibility |
+| Legacy route suite, database stubbed | **19 passed** | Real database persistence/schema compatibility |
 | Demo production dependency audit | **0 known findings at preparation** | A complete security review |
 | Docker recipe | Provided, not executed | Container compatibility |
 
@@ -73,7 +73,7 @@ routes/            Oracle workflow routes
 util/              Query lifecycle, validation, configuration, and error helpers
 views/ + public/   Original interface templates and assets
 demo/              Runnable synthetic preview + 13 tests
-test/              17 synthetic legacy-route tests
+test/              19 synthetic legacy-route/helper tests
 docs/              Detailed setup, safety, and project context
 ```
 
