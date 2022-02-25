@@ -1,0 +1,53 @@
+name: PostgreSQL application checks
+
+on:
+  push:
+    branches: [master, main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: ci_user
+          POSTGRES_PASSWORD: disposable-ci-only
+          POSTGRES_DB: badhon_test_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U ci_user -d badhon_test_ci"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      # Credentials belong only to this disposable synthetic-data CI service.
+      DATABASE_URL: postgresql://ci_user:disposable-ci-only@127.0.0.1:5432/badhon_test_ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            demo/package-lock.json
+      - name: Install application dependencies without lifecycle scripts
+        run: npm ci --ignore-scripts
+      - name: Unit and route tests
+        run: npm test
+      - name: Real PostgreSQL integration tests (fresh synthetic database)
+        run: npm run test:integration
+      - name: Install read-only demo dependencies
+        working-directory: demo
+        run: npm ci --ignore-scripts
+      - name: Read-only demo and helper tests
+        working-directory: demo
+        run: npm test

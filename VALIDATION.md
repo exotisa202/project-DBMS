@@ -42,3 +42,7 @@ No account records or secrets are logged by the connectivity helper. Request/dat
 - Existing historical root dependency deprecation warnings remain. The earlier read-only demo dependency audit reported zero known findings at that preparation step; that is not a security audit of the full app.
 
 See [PostgreSQL setup](docs/POSTGRESQL.md) for repeatable commands and the explicit fresh-database safeguards.
+
+## Automated checks
+
+A GitHub Actions workflow now mirrors the runnable checks under `.github/workflows/ci.yml`, with read-only repository permissions and a ten-minute job timeout. The database projects use a fresh PostgreSQL 17 service containing only synthetic records; the compiler installs its toolchain and runs the four-stage smoke test. Local checks were rerun successfully before publication. At the time of inspection these repositories had no Actions runs; remote workflow results must be checked after pushing rather than inferred from local success.
