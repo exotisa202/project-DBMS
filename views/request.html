@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    -<title> Responsive Patient Form | CodingLab </title>-
+    <link rel="stylesheet" href="/css/request.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body> 
+  <div class="container">
+    <div class="title"> Patient Verification </div>
+    <div class="content">
+      <form action="/request" method="post">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Full Name</span>
+            <input type="text" name="name" placeholder="Enter your name" required>
+          </div> 
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input type="text" name="email" placeholder="Enter your email" required>
+          </div>
+          
+          <div class="input-box">
+            <span class="details">Location</span>
+            <input type="text" name="location" placeholder="Location" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Phone Number</span>
+            <input type="text" name="phone" placeholder="Enter your number" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Assigned Hospital Number</span>
+            <input type="text" name="hospital" placeholder="Assigned Hospital" >
+          </div> 
+        <div class="input-box">
+            <span class="details">Blood Group</span>
+            <input type="text" name="bg" placeholder="Blood Group" > 
+            </div>
+        
+        <div class="button">
+          <input type="submit" value="Request">
+        </div>
+      </form>
+    </div>
+  </div>
+  
+  <ul> 
+    <li><a href="/home">back </a></li> 
+</ul>
+
+</body>
+</html>

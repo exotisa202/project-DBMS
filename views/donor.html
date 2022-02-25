@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<!-- Created By CodingLab - www.codinglabweb.com -->
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    -<title> Responsive Registration Form | CodingLab </title>-
+    <link rel="stylesheet" href="/css/style2.css">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   </head>
+<body>
+  <div class="container">
+    <div class="title"> Donor Registration </div>
+    <div class="content">
+      <form action="/donor" method="post">
+        <div class="user-details">
+          <div class="input-box">
+            <span class="details">Full Name</span>
+            <input type="text" name ="name" placeholder="Enter your name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">ID</span>
+            <input type="number" name="id" placeholder="Enter your ID" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Email</span>
+            <input type="text" name ="email" placeholder="Enter your email" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Father's Name</span>
+            <input type="text" placeholder="Father's Name" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Mother's Name</span>
+            <input type="text" placeholder="Mother's Name" required>
+          </div>
+          
+          <div class="input-box">
+            <span class="details">Location</span>
+            <input type="text" name ="location" placeholder="Location" required>
+          </div>
+          <div class="input-box">
+            <span class="details">Phone Number</span>
+            <input type="number" name ="phone" placeholder="Enter your number" required>
+          </div> 
+            <div class="input-box">
+              <span class="details">blood group</span>
+              <input type="text" name ="blg" placeholder="Enter your bloodgroup" required>
+            </div> 
+            <div class="input-box">
+              <span class="details">Date of Birth</span>
+              <!-- <input type="text" placeholder="Date of Birth" required> -->
+              <div class="input-box">
+                    <label for="dob">Date Of Birth:</label>
+                </div>
+                <div class="input-box">
+                    <input type="text" id="dob" name="dob">
+                </div>
+          </div>
+          <div class="input-box">
+            <span class="details">Password</span>
+            <input type="text" placeholder="Enter your password" required>
+          </div>
+          <div class="input-box"> <span class="details">Last date of donation</span>
+            <!-- <input type="text" placeholder="Date of Birth" required> -->
+            <div class="input-box">
+                  <label for="dob">Last date of donation:</label>
+              </div>
+              <div class="input-box">
+                  <input type="text" id="dob" name="lod">
+          </div>
+        </div> 
+        <div class="button">
+          <input type="submit" value="Register">
+        </div> 
+      </form>
+  </div>
+
+<div class="bk">
+        <a href="/home" >Back</a></div>
+    </div>
+</body>
+</html>
