@@ -1,4 +1,4 @@
-// Separate, read-only demonstration: never imports the legacy Oracle routes.
+// Separate, read-only demonstration: never imports the database-backed routes.
 const express = require('express');
 const path = require('node:path');
 const app = express();

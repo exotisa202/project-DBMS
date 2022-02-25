@@ -1,13 +1,13 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
 const database = require('../util/database');
-const checkConnection = require('../util/oracleCon');
+const checkConnection = require('../util/postgresHealth');
 
-test('connectivity helper only queries DUAL, without account data', async () => {
+test('connectivity helper only queries a constant, without account data', async () => {
   let statement;
-  database.execute = async sql => { statement = sql; return {rows: [{OK: 1}]}; };
+  database.execute = async sql => { statement = sql; return {rows: [{ok: 1}]}; };
   assert.equal(await checkConnection(), true);
-  assert.equal(statement, 'SELECT 1 AS OK FROM DUAL');
+  assert.equal(statement, 'SELECT 1 AS ok');
   database.execute = async () => ({rows: []});
   assert.equal(await checkConnection(), false);
 });

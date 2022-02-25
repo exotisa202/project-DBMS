@@ -1,13 +1,19 @@
-// One connection per operation; no request-specific module globals.
-function createDatabase(driver, config) {
-  return async function execute(sql, binds = [], options = {}) {
-    const connection = await driver.getConnection(config);
-    try { return await connection.execute(sql, binds, {outFormat: driver.OUT_FORMAT_OBJECT, ...options}); }
-    finally { await connection.close(); }
-  };
+// pg.Pool.query acquires/releases a client for each single-statement operation.
+function createDatabase(pool) {
+  return async (text, values = []) => pool.query(text, values);
 }
-async function execute(...args) {
-  const driver = require('oracledb');
-  return createDatabase(driver, require('./dbConfig'))(...args);
+let pool;
+function getPool() {
+  if (!pool) {
+    const {Pool, types} = require('pg');
+    pool = new Pool({...require('./dbConfig')(), types: {
+      getTypeParser(oid, format) { return oid === 1082 ? value => value : types.getTypeParser(oid, format); }
+    }});
+    // Do not log database errors: they can contain connection or record details.
+    pool.on('error', () => console.error('PostgreSQL idle connection error.'));
+  }
+  return pool;
 }
-module.exports = {execute, createDatabase};
+async function execute(text, values = []) { return createDatabase(getPool())(text, values); }
+async function close() { if (pool) { const old = pool; pool = undefined; await old.end(); } }
+module.exports = {execute, createDatabase, close};

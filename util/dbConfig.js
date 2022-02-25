@@ -1,5 +1,6 @@
-// Set these variables explicitly; never commit real credentials.
-for (const name of ['DB_USER', 'DB_PASSWORD', 'DB_CONNECT_STRING']) {
-  if (!process.env[name]) throw new Error(`Missing ${name}; see README.md. Use the demo/ app for a database-free preview.`);
-}
-module.exports = {user:process.env.DB_USER, password:process.env.DB_PASSWORD, connectString:process.env.DB_CONNECT_STRING};
+// DATABASE_URL is supplied by the caller. Never commit a real connection URL.
+module.exports = function databaseConfig() {
+  if (!process.env.DATABASE_URL) throw new Error('Missing DATABASE_URL; see docs/POSTGRESQL.md.');
+  return {connectionString: process.env.DATABASE_URL, max: 5,
+    connectionTimeoutMillis: 5000, idleTimeoutMillis: 10000};
+};

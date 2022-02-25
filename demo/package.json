@@ -2,7 +2,7 @@
   "name": "badhon-readonly-demo",
   "version": "1.0.0",
   "private": true,
-  "description": "Synthetic read-only UI preview; no Oracle connection",
+  "description": "Synthetic read-only UI preview; no database connection",
   "scripts": {
     "start": "node server.js",
     "test": "node --test"

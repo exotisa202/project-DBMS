@@ -41,8 +41,9 @@ app.use((req, res, next) => {
 });
 
 app.use((err, req, res, next) => {
-    console.error(err.message);
-    res.status(err.status === 400 ? 400 : 500).send(err.status === 400 ? err.message : 'Database operation failed. Check local server configuration.');
+    console.error('Request failed:', err.status === 400 ? 'invalid input' : 'database/server error');
+    const status = err.status === 400 ? 400 : err.code === '23505' ? 409 : ['23514', '22007', '22008', '22P02'].includes(err.code) ? 400 : 500;
+    res.status(status).send(status === 400 ? 'Invalid input.' : status === 409 ? 'A record with this key already exists.' : 'Database operation failed. Check local server configuration.');
 });
 if (require.main === module) app.listen(Number(process.env.PORT || 3000), '127.0.0.1');
 module.exports = app;

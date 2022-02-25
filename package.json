@@ -5,8 +5,12 @@
   "main": "app.js",
   "scripts": {
     "test": "node --test test/*.test.js",
-    "start": "nodemon app.js",
-    "start-server": "node app.js"
+    "start": "node app.js",
+    "start-server": "node app.js",
+    "dev": "nodemon app.js",
+    "db:setup": "node scripts/db-setup.js",
+    "db:seed": "node scripts/db-setup.js --seed",
+    "test:integration": "node --test test/integration/*.test.js"
   },
   "author": "Maximilian Schwarzm\u00fcller",
   "license": "ISC",
@@ -17,6 +21,6 @@
     "body-parser": "^1.18.3",
     "ejs": "^3.1.6",
     "express": "^4.16.3",
-    "oracledb": "^5.3.0"
+    "pg": "8.23.1"
   }
 }
